@@ -1,0 +1,35 @@
+{
+  "name": "dota2",
+  "version": "1.0.0",
+  "description": "Dota 2 graphql api",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsnd --respawn ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "keywords": [
+    "dota2"
+  ],
+  "author": "Nikita Kirsanov",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-koa": "^2.4.8",
+    "axios": "^0.18.0",
+    "graphql": "^14.1.1",
+    "inversify": "^5.0.1",
+    "inversify-inject-decorators": "^3.1.0",
+    "koa": "^2.7.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^0.17.0"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.0.7",
+    "prettier": "^1.16.4",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "typescript": "^3.3.3333"
+  }
+}
