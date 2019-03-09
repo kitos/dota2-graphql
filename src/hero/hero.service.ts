@@ -14,9 +14,13 @@ export default class HeroService {
     return heroes
   }
 
-  async getHero(heroId: number) {
+  async getHeroesByIds(ids: number[]) {
     let heroes = await this.getHeroes()
 
-    return heroes.find(({ id }) => id === heroId)
+    return heroes.filter(({ id }) => ids.includes(id))
+  }
+
+  async getHero(heroId: number) {
+    return (await this.getHeroesByIds([heroId]))[0]
   }
 }

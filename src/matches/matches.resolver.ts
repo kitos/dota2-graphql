@@ -6,19 +6,21 @@ import {
   Root
 } from 'type-graphql'
 import { AxiosInstance } from 'axios'
+import * as DataLoader from 'dataloader'
 
 import Match from './match'
 import { lazyInject } from '../ioc'
-import HeroService from '../hero/hero.service'
 import Hero from '../hero/hero'
+
+let convertIds = (idsString: string) => idsString.split(',').map(Number)
 
 @Resolver(() => Match)
 export default class MatchesResolver implements ResolverInterface<Match> {
   @lazyInject('dota')
   dota: AxiosInstance
 
-  @lazyInject(HeroService)
-  heroService: HeroService
+  @lazyInject('heroesLoader')
+  heroesLoader: DataLoader<number, Hero>
 
   @Query(() => [Match])
   async publicMatches() {
@@ -27,22 +29,16 @@ export default class MatchesResolver implements ResolverInterface<Match> {
   }
 
   @FieldResolver(() => [Hero])
-  async radiantTeam(@Root() match: Match) {
-    let ids = match.radiant_team.split(',')
-
-    return await this.getTeam(ids)
+  radiantTeam(@Root() match: Match) {
+    return this.getTeam(convertIds(match.radiant_team))
   }
 
   @FieldResolver(() => [Hero])
-  async direTeam(@Root() match: Match) {
-    let ids = match.dire_team.split(',')
-
-    return await this.getTeam(ids)
+  direTeam(@Root() match: Match) {
+    return this.getTeam(convertIds(match.dire_team))
   }
 
-  getTeam(ids: string[]) {
-    return Promise.all(
-      ids.map(async heroId => this.heroService.getHero(+heroId))
-    )
+  getTeam(ids: number[]) {
+    return this.heroesLoader.loadMany(ids)
   }
 }
