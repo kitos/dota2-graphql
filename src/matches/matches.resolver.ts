@@ -1,16 +1,8 @@
-import {
-  FieldResolver,
-  Query,
-  Resolver,
-  ResolverInterface,
-  Root
-} from 'type-graphql'
-import { AxiosInstance } from 'axios'
-import * as DataLoader from 'dataloader'
+import { FieldResolver, Query, Resolver, ResolverInterface, Root } from 'type-graphql'
 
 import Match from './match'
 import { lazyInject } from '../ioc'
-import Types from '../ioc-types'
+import { ITypes, Types } from '../ioc-types'
 import Hero from '../hero/hero'
 
 let convertIds = (idsString: string) => idsString.split(',').map(Number)
@@ -18,10 +10,10 @@ let convertIds = (idsString: string) => idsString.split(',').map(Number)
 @Resolver(() => Match)
 export default class MatchesResolver implements ResolverInterface<Match> {
   @lazyInject(Types.Dota)
-  dota: AxiosInstance
+  dota: ITypes.Dota
 
   @lazyInject(Types.HeroesLoader)
-  heroesLoader: DataLoader<number, Hero>
+  heroesLoader: ITypes.HeroesLoader
 
   @Query(() => [Match])
   async publicMatches() {
