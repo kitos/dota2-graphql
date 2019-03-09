@@ -10,16 +10,17 @@ import * as DataLoader from 'dataloader'
 
 import Match from './match'
 import { lazyInject } from '../ioc'
+import Types from '../ioc-types'
 import Hero from '../hero/hero'
 
 let convertIds = (idsString: string) => idsString.split(',').map(Number)
 
 @Resolver(() => Match)
 export default class MatchesResolver implements ResolverInterface<Match> {
-  @lazyInject('dota')
+  @lazyInject(Types.Dota)
   dota: AxiosInstance
 
-  @lazyInject('heroesLoader')
+  @lazyInject(Types.HeroesLoader)
   heroesLoader: DataLoader<number, Hero>
 
   @Query(() => [Match])

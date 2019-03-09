@@ -1,11 +1,12 @@
 import { inject, injectable } from 'inversify'
+import { AxiosInstance } from 'axios'
 
 import Hero from './hero'
-import { AxiosInstance } from 'axios'
+import Types from '../ioc-types'
 
 @injectable()
 export default class HeroService {
-  @inject('dota')
+  @inject(Types.Dota)
   dota: AxiosInstance
 
   async getHeroes() {
