@@ -9,8 +9,14 @@ export default class HeroService {
   dota: AxiosInstance
 
   async getHeroes() {
-    let { data: heroes } = await this.dota.get<Hero>('/heroes')
+    let { data: heroes } = await this.dota.get<Hero[]>('/heroes')
 
     return heroes
+  }
+
+  async getHero(heroId: number) {
+    let heroes = await this.getHeroes()
+
+    return heroes.find(({ id }) => id === heroId)
   }
 }
