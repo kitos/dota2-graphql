@@ -18,7 +18,7 @@ iocContainer.bind(Types.HeroesLoader).toDynamicValue(
   }
 )
 
-iocContainer.bind(Types.Dota).toFactory(() => dota)
+iocContainer.bind(Types.Dota).toConstantValue(dota)
 
 let { lazyInject } = getDecorators(iocContainer)
 
