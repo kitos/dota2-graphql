@@ -1,10 +1,10 @@
 import { Container } from 'inversify'
-import * as DataLoader from 'dataloader'
 
 import HeroService from './hero/hero.service'
 import { createDota } from './dota'
-import { ITypes, Types } from './ioc-types'
+import { Types } from './ioc-types'
 import logger from './logger'
+import createHeroLoader from './hero/hero.loader'
 
 let iocContainer = new Container()
 
@@ -35,13 +35,7 @@ iocContainer
 
 iocContainer
   .bind(Types.HeroesLoader)
-  .toDynamicValue(
-    ({ container }): ITypes.HeroesLoader => {
-      let heroService = container.get(HeroService)
-
-      return new DataLoader(ids => heroService.getHeroesByIds(ids))
-    }
-  )
+  .toDynamicValue(createHeroLoader)
   .inSingletonScope()
 
 iocContainer
