@@ -3,10 +3,13 @@ import getDecorators from 'inversify-inject-decorators'
 import * as DataLoader from 'dataloader'
 
 import HeroService from './hero/hero.service'
-import dota from './dota'
+import { createDota } from './dota'
 import { Types, ITypes } from './ioc-types'
+import logger from './logger'
 
 let iocContainer = new Container()
+
+iocContainer.bind(Types.Logger).toConstantValue(logger)
 
 iocContainer.bind(HeroService).toSelf()
 
@@ -18,7 +21,7 @@ iocContainer.bind(Types.HeroesLoader).toDynamicValue(
   }
 )
 
-iocContainer.bind(Types.Dota).toConstantValue(dota)
+iocContainer.bind(Types.Dota).toDynamicValue(createDota)
 
 let { lazyInject } = getDecorators(iocContainer)
 
