@@ -1,11 +1,12 @@
 import { Container } from 'inversify'
-import getDecorators from 'inversify-inject-decorators'
 import * as DataLoader from 'dataloader'
 
 import HeroService from './hero/hero.service'
 import { createDota } from './dota'
 import { Types, ITypes } from './ioc-types'
 import logger from './logger'
+import MatchesResolver from './matches/matches.resolver'
+import HeroResolver from './hero/hero.resolver'
 
 let iocContainer = new Container()
 
@@ -29,18 +30,35 @@ iocContainer.applyMiddleware(planAndResolve => args => {
 
 iocContainer.bind(Types.Logger).toConstantValue(logger)
 
-iocContainer.bind(HeroService).toSelf()
+iocContainer
+  .bind(HeroService)
+  .toSelf()
+  .inSingletonScope()
 
-iocContainer.bind(Types.HeroesLoader).toDynamicValue(
-  ({ container }): ITypes.HeroesLoader => {
-    let heroService = container.get(HeroService)
+iocContainer
+  .bind(Types.HeroesLoader)
+  .toDynamicValue(
+    ({ container }): ITypes.HeroesLoader => {
+      let heroService = container.get(HeroService)
 
-    return new DataLoader(ids => heroService.getHeroesByIds(ids))
-  }
-)
+      return new DataLoader(ids => heroService.getHeroesByIds(ids))
+    }
+  )
+  .inSingletonScope()
 
-iocContainer.bind(Types.Dota).toDynamicValue(createDota)
+iocContainer
+  .bind(MatchesResolver)
+  .toSelf()
+  .inSingletonScope()
 
-let { lazyInject } = getDecorators(iocContainer)
+iocContainer
+  .bind(HeroResolver)
+  .toSelf()
+  .inSingletonScope()
 
-export { iocContainer, lazyInject }
+iocContainer
+  .bind(Types.Dota)
+  .toDynamicValue(createDota)
+  .inSingletonScope()
+
+export { iocContainer }

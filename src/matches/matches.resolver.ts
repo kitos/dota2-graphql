@@ -1,18 +1,25 @@
-import { FieldResolver, Query, Resolver, ResolverInterface, Root } from 'type-graphql'
+import {
+  FieldResolver,
+  Query,
+  Resolver,
+  ResolverInterface,
+  Root
+} from 'type-graphql'
+import { inject, injectable } from 'inversify'
 
 import Match from './match'
-import { lazyInject } from '../ioc'
 import { ITypes, Types } from '../ioc-types'
 import Hero from '../hero/hero'
 
 let convertIds = (idsString: string) => idsString.split(',').map(Number)
 
+@injectable()
 @Resolver(() => Match)
 export default class MatchesResolver implements ResolverInterface<Match> {
-  @lazyInject(Types.Dota)
+  @inject(Types.Dota)
   dota: ITypes.Dota
 
-  @lazyInject(Types.HeroesLoader)
+  @inject(Types.HeroesLoader)
   heroesLoader: ITypes.HeroesLoader
 
   @Query(() => [Match])
