@@ -1,7 +1,13 @@
 import 'reflect-metadata'
 import * as Koa from 'koa'
 import { ApolloServer } from 'apollo-server-koa'
+import { config } from 'dotenv'
+
+config()
+
 import buildSchema from './schema'
+
+let { APP_PORT } = process.env
 
 let bootstrap = async () => {
   let server = new ApolloServer({ schema: await buildSchema() })
@@ -9,9 +15,9 @@ let bootstrap = async () => {
 
   server.applyMiddleware({ app })
 
-  app.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-  )
+  return new Promise(resolve => app.listen({ port: APP_PORT }, resolve))
 }
 
-bootstrap()
+bootstrap().then(() =>
+  console.log(`🚀 Server ready at http://localhost:${APP_PORT}`)
+)
