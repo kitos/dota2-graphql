@@ -18,7 +18,7 @@
   "author": "Nikita Kirsanov",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-koa": "^2.4.8",
+    "apollo-server-koa": "^2.14.2",
     "axios": "^0.18.0",
     "dataloader": "^1.4.0",
     "dotenv": "^6.2.0",
